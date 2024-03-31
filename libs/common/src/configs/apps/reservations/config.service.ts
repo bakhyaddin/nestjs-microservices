@@ -22,4 +22,14 @@ export class ReservationsAppConfigService {
     return this.configService.get(this.configurationNamespace)
       .authServiceTcpPort;
   }
+
+  get paymentsServiceHost() {
+    return this.configService.get(this.configurationNamespace)
+      .paymentsServiceHost;
+  }
+
+  get paymentsServiceTcpPort() {
+    return this.configService.get(this.configurationNamespace)
+      .paymentsServiceTcpPort;
+  }
 }

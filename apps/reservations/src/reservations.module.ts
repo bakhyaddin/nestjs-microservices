@@ -6,7 +6,7 @@ import {
   ReservationsAppConfigService,
 } from '@app/common/configs/apps/reservations';
 import { MongoDbModule } from '@app/common/databases/mongodb';
-import { AUTH_SERVICE } from '@app/common/constants';
+import { AUTH_SERVICE, PAYMENTS_SERVICE } from '@app/common/constants';
 
 import { ReservationsService } from './reservations.service';
 import { ReservationsController } from './reservations.controller';
@@ -36,6 +36,20 @@ import {
           options: {
             host: reservationsAppConfigService.authServiceHost,
             port: reservationsAppConfigService.authServiceTcpPort,
+          },
+        }),
+        inject: [ReservationsAppConfigService],
+        imports: [ReservationsAppConfigModule],
+      },
+      {
+        name: PAYMENTS_SERVICE,
+        useFactory: (
+          reservationsAppConfigService: ReservationsAppConfigService,
+        ) => ({
+          transport: Transport.TCP,
+          options: {
+            host: reservationsAppConfigService.paymentsServiceHost,
+            port: reservationsAppConfigService.paymentsServiceTcpPort,
           },
         }),
         inject: [ReservationsAppConfigService],

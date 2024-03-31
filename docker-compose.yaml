@@ -31,8 +31,6 @@ services:
       dockerfile: ./apps/payments/Dockerfile
       target: development
     command: pnpm start:dev payments
-    ports:
-      - 3003:3003
     env_file:
       - ./apps/payments/.env
     volumes:
