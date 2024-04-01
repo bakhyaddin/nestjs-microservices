@@ -13,4 +13,14 @@ export class PaymentsAppConfigService {
   get port() {
     return this.configService.get(this.configurationNamespace).port;
   }
+
+  get notificationsServiceHost() {
+    return this.configService.get(this.configurationNamespace)
+      .notificationsServiceHost;
+  }
+
+  get notificationsServicePort() {
+    return this.configService.get(this.configurationNamespace)
+      .notificationsServicePort;
+  }
 }

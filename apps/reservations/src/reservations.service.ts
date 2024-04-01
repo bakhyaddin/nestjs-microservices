@@ -17,16 +17,19 @@ export class ReservationsService {
     private readonly reservationsRepository: ReservationsRepository,
   ) {}
 
-  async create(createReservationDto: CreateReservationDto, user: UserDto) {
+  async create(
+    createReservationDto: CreateReservationDto,
+    { email, _id: userId }: UserDto,
+  ) {
     return this.paymentsService
-      .send('create_charge', createReservationDto.charge)
+      .send('create_charge', { ...createReservationDto.charge, email })
       .pipe(
         map(async (response) => {
           return this.reservationsRepository.create({
             ...createReservationDto,
             invoiceId: response.id,
             timestamp: new Date(),
-            userId: user._id,
+            userId,
           });
         }),
       );
