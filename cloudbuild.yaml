@@ -11,6 +11,9 @@ steps:
         "apps/auth/Dockerfile",
         "."
       ]
+  - name: "gcr.io/cloud-builders/docker"
+    args:
+      ["push", "me-west1-docker.pkg.dev/sleepr-419018/sleepr/auth:latest"]
   # Notifications service
   - name: "gcr.io/cloud-builders/docker"
     args:
@@ -22,6 +25,9 @@ steps:
         "apps/notifications/Dockerfile",
         "."
       ]
+  - name: "gcr.io/cloud-builders/docker"
+    args:
+      ["push", "me-west1-docker.pkg.dev/sleepr-419018/sleepr/notifications:latest"]
   # Payments service
   - name: "gcr.io/cloud-builders/docker"
     args:
@@ -33,6 +39,9 @@ steps:
         "apps/payments/Dockerfile",
         "."
       ]
+  - name: "gcr.io/cloud-builders/docker"
+    args:
+      ["push", "me-west1-docker.pkg.dev/sleepr-419018/sleepr/payments:latest"]
   # Reservations service
   - name: "gcr.io/cloud-builders/docker"
     args:
@@ -44,3 +53,6 @@ steps:
         "apps/reservations/Dockerfile",
         "."
       ]
+  - name: "gcr.io/cloud-builders/docker"
+    args:
+      ["push", "me-west1-docker.pkg.dev/sleepr-419018/sleepr/reservations:latest"]
