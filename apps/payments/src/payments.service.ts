@@ -26,7 +26,10 @@ export class PaymentsService {
           1500,
         );
       });
-      this.notificationsService.emit('notify_email', { email });
+      this.notificationsService.emit('notify_email', {
+        email,
+        text: `Your payment of $${amount} has completed successfully`,
+      });
       return transaction;
     } catch (err) {
       this.logger.error('Error during transaction', err.message);
