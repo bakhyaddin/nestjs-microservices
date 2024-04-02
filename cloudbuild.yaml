@@ -1,0 +1,46 @@
+steps:
+  # a pre-build container allows us to build, tag and push docker image
+  # Auth service
+  - name: "gcr.io/cloud-builder/docker"
+    args:
+      [
+        "build",
+        "-t",
+        "me-west1-docker.pkg.dev/sleepr-419018/sleepr/auth:latest",
+        "-f",
+        "apps/auth/Dockerfile",
+        "."
+      ]
+  # Notifications service
+  - name: "gcr.io/cloud-builder/docker"
+    args:
+      [
+        "build",
+        "-t",
+        "me-west1-docker.pkg.dev/sleepr-419018/sleepr/notifications:latest",
+        "-f",
+        "apps/notifications/Dockerfile",
+        "."
+      ]
+  # Payments service
+  - name: "gcr.io/cloud-builder/docker"
+    args:
+      [
+        "build",
+        "-t",
+        "me-west1-docker.pkg.dev/sleepr-419018/sleepr/payments:latest",
+        "-f",
+        "apps/payments/Dockerfile",
+        "."
+      ]
+  # Reservations service
+  - name: "gcr.io/cloud-builder/docker"
+    args:
+      [
+        "build",
+        "-t",
+        "me-west1-docker.pkg.dev/sleepr-419018/sleepr/reservations:latest",
+        "-f",
+        "apps/reservations/Dockerfile",
+        "."
+      ]
