@@ -2,15 +2,16 @@ FROM node:alpine AS development
 
 WORKDIR /usr/src/app
 
+COPY apps/reservations apps/reservations
+COPY libs libs
 COPY package.json ./
 COPY pnpm-lock.yaml ./
+COPY tsconfig.json ./
+COPY nest-cli.json ./
 
 RUN npm install -g pnpm
-RUN pnpm install
-
-COPY . .
-
-RUN pnpm run build
+RUN pnpm install -r
+RUN pnpm run build reservations
 
 FROM node:alpine as production
 

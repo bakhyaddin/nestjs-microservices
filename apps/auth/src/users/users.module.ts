@@ -1,9 +1,10 @@
 import { Module } from '@nestjs/common';
+
 import { MongoDbModule } from '@app/common/databases/mongodb';
+import { UserDocument, UserSchema } from '@app/common/models';
 
 import { UsersController } from './users.controller';
 import { UsersService } from './users.service';
-import { UserDocument, UserSchema } from './models/user.schema';
 import { UsersRepository } from './users.repository';
 
 @Module({
