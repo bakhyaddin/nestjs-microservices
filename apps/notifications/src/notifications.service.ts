@@ -26,7 +26,7 @@ export class NotificationsService {
   }
 
   async notifyEmail({ email, text }: NotifyEmailDto) {
-    await this.transporter.sendMail({
+    return this.transporter.sendMail({
       from: this.notificationsAppConfigService.smtpUser,
       to: email,
       subject: 'Sleepr Notification',
