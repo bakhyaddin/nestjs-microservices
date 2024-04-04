@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
-import { LoggerModule } from '@app/common';
+import { HealthModule, LoggerModule } from '@app/common';
 import {
   AuthAppConfigModule,
   AuthAppConfigService,
@@ -27,6 +27,7 @@ import { JwtStrategy } from './strategies/jwt.strategy';
       inject: [AuthAppConfigService],
       imports: [AuthAppConfigModule],
     }),
+    HealthModule,
   ],
   controllers: [AuthController],
   providers: [AuthService, AuthAppConfigService, LocalStrategy, JwtStrategy],

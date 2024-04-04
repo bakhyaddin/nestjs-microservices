@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { LoggerModule } from '@app/common';
+import { HealthModule, LoggerModule } from '@app/common';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 import {
   ReservationsAppConfigModule,
@@ -56,6 +56,7 @@ import {
         imports: [ReservationsAppConfigModule],
       },
     ]),
+    HealthModule,
   ],
   controllers: [ReservationsController],
   providers: [
