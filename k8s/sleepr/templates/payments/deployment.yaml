@@ -15,5 +15,14 @@ spec:
         app: payments
     spec:
       containers:
-      - image: me-west1-docker.pkg.dev/sleepr-419018/sleepr/payments
+      - image: me-west1-docker.pkg.dev/sleepr-419018/sleepr/payments:latest
         name: payments
+        env:
+          - name: PORT
+            value: "3001"
+          - name: NOTIFICATIONS_SERVICE_HOST
+            value: notifications
+          - name: NOTIFICATIONS_SERVICE_PORT
+            value: "3000"
+        ports:
+          - containerPort: 3001

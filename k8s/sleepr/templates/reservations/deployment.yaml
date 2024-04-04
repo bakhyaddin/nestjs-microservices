@@ -15,5 +15,23 @@ spec:
         app: reservations
     spec:
       containers:
-      - image: me-west1-docker.pkg.dev/sleepr-419018/sleepr/reservations
+      - image: me-west1-docker.pkg.dev/sleepr-419018/sleepr/reservations:latest
         name: reservations
+        env:
+          - name: MONGODB_URI
+            valueFrom:
+              secretKeyRef:
+                name: sleepr
+                key: mongoDbConnectionUri
+          - name: PORT
+            value: "3004"
+          - name: AUTH_SERVICE_HOST
+            value: auth-tcp
+          - name: AUTH_SERVICE_TCP_PORT
+            value: "3002"
+          - name: PAYMENTS_SERVICE_HOST
+            value: payments
+          - name: PAYMENTS_SERVICE_TCP_PORT
+            value: "3001"
+        ports:
+          - containerPort: 3004
