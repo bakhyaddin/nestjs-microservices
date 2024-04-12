@@ -21,8 +21,10 @@ export class JwtAuthGuard implements CanActivate {
   canActivate(
     context: ExecutionContext,
   ): boolean | Promise<boolean> | Observable<boolean> {
+    const request = context.switchToHttp().getRequest();
     // cookie-parser library is responsible for populating the cookies property in the request object
-    const jwt = context.switchToHttp().getRequest().cookies?.Authentication;
+    const jwt =
+      request?.cookies?.Authentication || request?.headers?.authentication;
     if (!jwt) {
       return false;
     }
@@ -38,7 +40,7 @@ export class JwtAuthGuard implements CanActivate {
           // user returned from the 'authenticate' message pattern in the auth microservice
           // is mapped back to the user property in the request object
           tap((res) => {
-            context.switchToHttp().getRequest().user = res;
+            request.user = res;
           }),
           map(() => true),
           // this is for handling 403 error

@@ -20,7 +20,9 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
         // this is done intentially.
         // this request can be from express or an RPC call
         (request: any) =>
-          request?.cookies?.Authentication || request?.Authentication,
+          request?.cookies?.Authentication ||
+          request?.Authentication ||
+          request?.headers?.Authentication,
       ]),
       secretOrKey: authAppConfigService.jwtSecret,
     });

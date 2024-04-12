@@ -20,8 +20,8 @@ export class AuthController {
     // we did it in order to be able to send back the JWT token in a cookie
     @Res({ passthrough: true }) response: Response,
   ) {
-    await this.authService.login(user, response);
-    response.send(user);
+    const token = await this.authService.login(user, response);
+    response.send(token);
   }
 
   @UseGuards(JwtAuthGuard)

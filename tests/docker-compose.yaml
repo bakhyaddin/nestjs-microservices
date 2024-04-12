@@ -1,0 +1,73 @@
+services:
+  tests:
+    build:
+      dockerfile: ./Dockerfile
+    volumes:
+      - ./unit:/usr/src/app/unit
+      - ./integration:/usr/src/app/integration
+      - ./e2e:/usr/src/app/e2e
+    depends_on:
+      - reservations
+      - auth
+      - payments
+      - notifications
+      - mongo
+
+  reservations:
+    build:
+      context: ../
+      dockerfile: ./apps/reservations/Dockerfile
+      target: development
+    command: pnpm start:dev reservations
+    ports:
+      - 3000:3000
+    env_file:
+      - ../apps/reservations/.env
+    volumes:
+      - ../apps/reservations/:/usr/src/app/apps/reservations
+      - ../libs/:/usr/src/app/libs
+
+  auth:
+    build:
+      context: ../
+      dockerfile: ./apps/auth/Dockerfile
+      target: development
+    command: pnpm start:dev auth
+    ports:
+      - 3001:3001
+    env_file:
+      - ../apps/auth/.env
+    volumes:
+      - ../apps/auth/:/usr/src/app/apps/auth
+      - ../libs/:/usr/src/app/libs
+
+  payments:
+    build:
+      context: ../
+      dockerfile: ./apps/payments/Dockerfile
+      target: development
+    command: pnpm start:dev payments
+    ports:
+      - 3003:3003
+    env_file:
+      - ../apps/payments/.env
+    volumes:
+      - ../apps/payments/:/usr/src/app/apps/payments
+      - ../libs/:/usr/src/app/libs
+
+  notifications:
+    build:
+      context: ../
+      dockerfile: ./apps/notifications/Dockerfile
+      target: development
+    command: pnpm start:dev notifications
+    ports:
+      - 3004:3004
+    env_file:
+      - ../apps/notifications/.env
+    volumes:
+      - ../apps/notifications/:/usr/src/app/apps/notifications
+      - ../libs/:/usr/src/app/libs
+
+  mongo:
+    image: mongo
