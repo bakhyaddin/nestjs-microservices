@@ -3,20 +3,27 @@ import {
   CanActivate,
   ExecutionContext,
   Inject,
+  UnauthorizedException,
+  Logger,
 } from '@nestjs/common';
 import { Observable, catchError, map, of, tap } from 'rxjs';
 
 import { AUTH_SERVICE } from '@app/common/constants/services';
 import { ClientProxy } from '@nestjs/microservices';
 import { UserDto } from '@app/common/dto';
+import { Reflector } from '@nestjs/core';
 
 @Injectable()
 export class JwtAuthGuard implements CanActivate {
+  private readonly logger = new Logger(JwtAuthGuard.name);
   // we need to inject client proxy
   // with client proxy microservices can talk to each other
   // for each micorservice we have an injections token as a string for each microservice
   // estabslishes communication through the defined tranport layer
-  constructor(@Inject(AUTH_SERVICE) private readonly authClient: ClientProxy) {}
+  constructor(
+    @Inject(AUTH_SERVICE) private readonly authClient: ClientProxy,
+    private readonly reflector: Reflector,
+  ) {}
 
   canActivate(
     context: ExecutionContext,
@@ -28,6 +35,10 @@ export class JwtAuthGuard implements CanActivate {
     if (!jwt) {
       return false;
     }
+
+    const roles =
+      this.reflector.get<string[]>('roles', context.getHandler()) || [];
+
     // authenticate is the message pattern that we have defined in the aut microservice controller
     return (
       this.authClient
@@ -40,11 +51,21 @@ export class JwtAuthGuard implements CanActivate {
           // user returned from the 'authenticate' message pattern in the auth microservice
           // is mapped back to the user property in the request object
           tap((res) => {
+            for (const role of roles) {
+              if (!(res.roles as string[]).includes(role)) {
+                this.logger.error('The user does not have valid roles');
+                throw new UnauthorizedException();
+              }
+            }
+
             request.user = res;
           }),
           map(() => true),
           // this is for handling 403 error
-          catchError(() => of(false)),
+          catchError((err) => {
+            this.logger.error(err);
+            return of(false);
+          }),
         )
     );
   }

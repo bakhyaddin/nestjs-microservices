@@ -9,7 +9,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { JwtAuthGuard } from '@app/common/auth/guards';
-import { CurrentUser } from '@app/common/decorators';
+import { CurrentUser, Roles } from '@app/common/decorators';
 import { UserDto } from '@app/common/dto';
 
 import { ReservationsService } from './reservations.service';
@@ -51,6 +51,7 @@ export class ReservationsController {
   }
 
   @UseGuards(JwtAuthGuard)
+  @Roles('Admin')
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.reservationsService.remove(id);
