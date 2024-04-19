@@ -5,7 +5,7 @@ import {
 } from '@nestjs/common';
 import * as bcrypt from 'bcryptjs';
 
-import { UserDocument } from '@app/common/models';
+import { Role, User } from '@app/common/models';
 
 import { CreateUserDto } from './dto/create-user.dto';
 import { UsersRepository } from './users.repository';
@@ -15,12 +15,14 @@ import { GetUserDto } from './dto/get-user.dto';
 export class UsersService {
   constructor(private usersRepository: UsersRepository) {}
 
-  async create(createUserDto: CreateUserDto): Promise<UserDocument> {
+  async create(createUserDto: CreateUserDto): Promise<User> {
     await this.validateCreateUserDto(createUserDto);
-    return this.usersRepository.create({
+    const user = new User({
       ...createUserDto,
       password: await bcrypt.hash(createUserDto.password, 10),
+      roles: createUserDto.roles?.map((roleDto) => new Role(roleDto)),
     });
+    return this.usersRepository.create(user);
   }
 
   async validateCreateUserDto(createUserDto: CreateUserDto) {
@@ -34,7 +36,7 @@ export class UsersService {
     throw new UnprocessableEntityException('Email already exists');
   }
 
-  async verifyUser(email: string, passport: string): Promise<UserDocument> {
+  async verifyUser(email: string, passport: string): Promise<User> {
     const user = await this.usersRepository.findOne({ email });
     const passwordIsValid = await bcrypt.compare(passport, user.password);
     if (!passwordIsValid) {

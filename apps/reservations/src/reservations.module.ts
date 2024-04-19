@@ -1,27 +1,23 @@
 import { Module } from '@nestjs/common';
 import { HealthModule, LoggerModule } from '@app/common';
 import { ClientsModule, Transport } from '@nestjs/microservices';
+
 import {
   ReservationsAppConfigModule,
   ReservationsAppConfigService,
 } from '@app/common/configs/apps/reservations';
-import { MongoDbModule } from '@app/common/databases/mongodb';
 import { AUTH_SERVICE, PAYMENTS_SERVICE } from '@app/common/constants';
+import { MySqlModule } from '@app/common/databases/mysql';
 
+import { Reservation } from './models/reservation.entity';
 import { ReservationsService } from './reservations.service';
 import { ReservationsController } from './reservations.controller';
 import { ReservationsRepository } from './reservations.repository';
-import {
-  ReservationDocument,
-  ReservationSchema,
-} from './models/reservation.schema';
 
 @Module({
   imports: [
-    MongoDbModule,
-    MongoDbModule.forFeature([
-      { name: ReservationDocument.name, schema: ReservationSchema },
-    ]),
+    MySqlModule,
+    MySqlModule.forFeature([Reservation]),
     ReservationsAppConfigModule,
     LoggerModule,
     // Telling the service that it can send an RPC request through the TCP transport layer the the Auth microservice

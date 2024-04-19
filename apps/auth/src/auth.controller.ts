@@ -2,7 +2,7 @@ import { Controller, Post, UseGuards, Res } from '@nestjs/common';
 import { MessagePattern } from '@nestjs/microservices';
 
 import { CurrentUser } from '@app/common/decorators';
-import { UserDocument } from '@app/common/models';
+import { User } from '@app/common/models';
 
 import { AuthService } from './auth.service';
 import { LocalAuthGuard } from './guards/local-auth.guard';
@@ -16,7 +16,7 @@ export class AuthController {
   @UseGuards(LocalAuthGuard)
   @Post('login')
   async login(
-    @CurrentUser() user: UserDocument,
+    @CurrentUser() user: User,
     // we did it in order to be able to send back the JWT token in a cookie
     @Res({ passthrough: true }) response: Response,
   ) {
@@ -27,7 +27,7 @@ export class AuthController {
   @UseGuards(JwtAuthGuard)
   // receives RPC calls in the chosen transport layer
   @MessagePattern('authenticate')
-  async authenticate(@CurrentUser() user: UserDocument) {
+  async authenticate(@CurrentUser() user: User) {
     return user;
   }
 }

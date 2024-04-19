@@ -1,5 +1,9 @@
 import { Module } from '@nestjs/common';
-import { ModelDefinition, MongooseModule } from '@nestjs/mongoose';
+import {
+  ModelDefinition,
+  MongooseModule,
+  MongooseOptionsFactory,
+} from '@nestjs/mongoose';
 
 import {
   MongoDbConfigService,

@@ -1,9 +1,10 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 
-import { UserDto } from '@app/common/dto';
+import { User } from '@app/common/models';
 import { PAYMENTS_SERVICE } from '@app/common/constants';
 
+import { Reservation } from './models/reservation.entity';
 import { CreateReservationDto } from './dto/create-reservation.dto';
 import { UpdateReservationDto } from './dto/update-reservation.dto';
 import { ReservationsRepository } from './reservations.repository';
@@ -19,38 +20,39 @@ export class ReservationsService {
 
   async create(
     createReservationDto: CreateReservationDto,
-    { email, _id: userId }: UserDto,
+    { email, id: userId }: User,
   ) {
     return this.paymentsService
       .send('create_charge', { ...createReservationDto.charge, email })
       .pipe(
         map(async (response) => {
-          return this.reservationsRepository.create({
+          const reservation = new Reservation({
             ...createReservationDto,
             invoiceId: response.id,
             timestamp: new Date(),
             userId,
           });
+          return this.reservationsRepository.create(reservation);
         }),
       );
   }
 
-  async findAll(userId: string) {
+  async findAll(userId: number) {
     return this.reservationsRepository.find({ userId });
   }
 
-  async findOne(_id: string) {
-    return this.reservationsRepository.findOne({ _id });
+  async findOne(id: number) {
+    return this.reservationsRepository.findOne({ id });
   }
 
-  async update(_id: string, updateReservationDto: UpdateReservationDto) {
+  async update(id: number, updateReservationDto: UpdateReservationDto) {
     return this.reservationsRepository.findOneAndUpdate(
-      { _id },
-      { $set: updateReservationDto },
+      { id },
+      updateReservationDto,
     );
   }
 
-  async remove(_id: string) {
-    return this.reservationsRepository.findOneAndDelete({ _id });
+  async remove(id: number) {
+    return this.reservationsRepository.findOneAndDelete({ id });
   }
 }

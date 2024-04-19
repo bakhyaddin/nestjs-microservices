@@ -6,12 +6,12 @@ import {
   UnauthorizedException,
   Logger,
 } from '@nestjs/common';
+import { Reflector } from '@nestjs/core';
 import { Observable, catchError, map, of, tap } from 'rxjs';
 
+import { User } from '@app/common/models';
 import { AUTH_SERVICE } from '@app/common/constants/services';
 import { ClientProxy } from '@nestjs/microservices';
-import { UserDto } from '@app/common/dto';
-import { Reflector } from '@nestjs/core';
 
 @Injectable()
 export class JwtAuthGuard implements CanActivate {
@@ -21,7 +21,8 @@ export class JwtAuthGuard implements CanActivate {
   // for each micorservice we have an injections token as a string for each microservice
   // estabslishes communication through the defined tranport layer
   constructor(
-    @Inject(AUTH_SERVICE) private readonly authClient: ClientProxy,
+    @Inject(AUTH_SERVICE)
+    private readonly authClient: ClientProxy,
     private readonly reflector: Reflector,
   ) {}
 
@@ -42,7 +43,7 @@ export class JwtAuthGuard implements CanActivate {
     // authenticate is the message pattern that we have defined in the aut microservice controller
     return (
       this.authClient
-        .send<UserDto>('authenticate', {
+        .send<User>('authenticate', {
           Authentication: jwt,
         })
         // piping additional properties in this observable
@@ -52,7 +53,7 @@ export class JwtAuthGuard implements CanActivate {
           // is mapped back to the user property in the request object
           tap((res) => {
             for (const role of roles) {
-              if (!(res.roles as string[]).includes(role)) {
+              if (!res.roles.map((role) => role.name).includes(role)) {
                 this.logger.error('The user does not have valid roles');
                 throw new UnauthorizedException();
               }

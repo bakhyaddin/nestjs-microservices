@@ -33,6 +33,6 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   // whatever is returned from the method will be populated as the user property in the request object
   public async validate({ userId }: TokenPayload) {
     // populates the user object in the request object
-    return this.usersService.getUser({ _id: userId });
+    return this.usersService.getUser({ id: userId });
   }
 }
