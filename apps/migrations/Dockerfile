@@ -2,7 +2,8 @@ FROM node:alpine AS development
 
 WORKDIR /usr/src/app
 
-COPY apps/auth apps/auth
+COPY apps/migrations apps/migrations
+COPY apps/reservations/src/models/reservation.entity apps/reservations/src/models/reservation.entity
 COPY libs libs
 COPY package.json ./
 COPY pnpm-lock.yaml ./
@@ -10,9 +11,8 @@ COPY tsconfig.json ./
 COPY nest-cli.json ./
 
 RUN npm install -g pnpm
-RUN pnpm install
-RUN cd apps/auth && pnpm install
-RUN pnpm run build auth
+RUN pnpm install -r
+RUN pnpm run build migrations
 
 FROM node:alpine as production
 
@@ -29,4 +29,4 @@ RUN pnpm install --prod
 
 COPY --from=development /usr/src/app/dist ./dist
 
-CMD ["node", "dist/apps/auth/main"]
+CMD ["pnpm", "start", "migrations"]

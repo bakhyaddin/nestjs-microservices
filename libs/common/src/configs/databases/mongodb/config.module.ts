@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ConfigModule } from '@nestjs/config';
 
 import { MongoDbVariablesValidation } from './config.validator';
 import { MongoDbConfigService } from './config.service';
@@ -14,7 +14,7 @@ import configurations from './configurations';
         ConfigValidator.validate(MongoDbVariablesValidation, config),
     }),
   ],
-  providers: [ConfigService, MongoDbConfigService],
+  providers: [MongoDbConfigService],
   exports: [MongoDbConfigService],
 })
 export class MongoDbConfigModule {}

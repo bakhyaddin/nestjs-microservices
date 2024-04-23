@@ -5,4 +5,5 @@ export enum ConfigurationNamespaces {
   AUTH_APP = 'auth_app',
   PAYMENTS_APP = 'payments_app',
   NOTIFICATIONS_APP = 'notifications_app',
+  MIGRATIONS_APP = 'migrations_app',
 }

@@ -1,0 +1,22 @@
+{
+  "name": "migrations",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "nest build",
+    "typeorm": "ts-node -r tsconfig-paths/register ../../node_modules/typeorm/cli.js -d ./src/ormconfig.ts",
+    "auth:migration:generate": "CONTEXT=auth npm run typeorm migration:generate ./src/auth/$npm_config_name",
+    "reservations:migration:generate": "CONTEXT=reservations npm run typeorm migration:generate ./src/reservations/$npm_config_name",
+    "migration:run": "pnpm typeorm migration:run",
+    "migration:revert": "pnpm typeorm migration:revert",
+    "migration:status": "pnpm typeorm migration:show"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "ts-node": "^10.9.2",
+    "tsconfig-paths": "^4.2.0"
+  }
+}
